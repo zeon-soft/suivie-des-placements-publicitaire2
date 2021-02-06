@@ -30,5 +30,5 @@ Route::get('/client', function () {
 Route::get('/client', 'ClientController@index')->name('client.index');
 Route::get('/client_add', 'ClientController@create')->name('client.create');
 Route::post('/client', 'ClientController@store')->name('client.store');
-Route::post('/circuit', 'ClientController@store')->name('circuit.store');
+//Route::post('/circuit', 'ClientController@store')->name('circuit.store');
 
