@@ -8,9 +8,9 @@ class Commerce extends Model
 {
 
 
+   // protected $fillable=['all'];
 
-
-
+    protected $guarded = [];
 
     public function Circuit()
     {

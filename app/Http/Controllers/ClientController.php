@@ -24,7 +24,7 @@ class ClientController extends Controller
      */
     public function create()
     {
-        //
+        return view('clients.create');
     }
 
     /**
@@ -35,7 +35,14 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+
+    Client::create($request->except('_token'));
+
+
+
+        //  $client->save($request->all());
+
     }
 
     /**

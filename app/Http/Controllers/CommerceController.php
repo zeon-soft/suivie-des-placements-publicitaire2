@@ -4,82 +4,95 @@ namespace App\Http\Controllers;
 
 use App\Commerce;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CommerceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        //
+        $commerces = Commerce::all();
+        return view('commerce.index', compact('commerces'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
-        //
+        return view('commerce.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
-        //
+
+
+
+        //dd($Jours_de_fermeture);
+        //  foreach($Jours_de_fermeture as $Jours_de_fermeture){
+      //      echo $Jours_de_fermeture;
+            //}
+      //  dd($request->Entreprise);
+        $input = $request->except('_token','Jours_de_fermeture','Mois_de_fermeture','num_client_commerce');
+        $commerce = Commerce::create($input);
+
+
+      //  $id = DB::getPdo()->lastInsertId();
+        $commerce1 = Commerce::findOrFail($commerce->id);
+
+
+        $Jours_de_fermeture = $request->input('Jours_de_fermeture');
+        $Mois_de_fermeture = $request->input('Mois_de_fermeture');
+
+
+        foreach($Jours_de_fermeture as &$value){
+            $value = "$value";
+        }
+
+        foreach($Mois_de_fermeture as &$value1){
+            $value1 = "$value1";
+        }
+        $separated1 = implode("/", $Jours_de_fermeture);
+        $separated2 = implode("/", $Mois_de_fermeture);
+
+        $commerce1->Jours_de_fermeture=$separated1;
+        $commerce1->Mois_de_fermeture=$separated2;
+        $commerce1->num_client_commerce=$commerce->id+10000;
+        $commerce1->save();
+
+
+        //   session::flash('flash_message', 'Commerce successfully added!');
+        return redirect()->back();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Commerce  $commerce
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Commerce $commerce)
+
+    public function show($id)
     {
-        //
+        $commerce = Commerce::findOrFail($id);
+        return view('commerce.show', compact(['commerce']));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Commerce  $commerce
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Commerce $commerce)
+
+    public function edit($id)
     {
-        //
+        $commerce = Commerce::findOrFail($id);
+        return view('commerce.edit', compact(['commerce']));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Commerce  $commerce
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Commerce $commerce)
+
+    public function update(Request $request, $id)
     {
-        //
+        $commerce = Commerce::findOrFail($id);
+        //  $input = $request->all();
+        $commerce->fill($request->except('_token'))->save();
+        //  Session::flash('flash_message', 'Commerce successfully updated!');
+        return redirect()->back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Commerce  $commerce
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Commerce $commerce)
+
+    public function destroy($id)
     {
-        //
+        $commerce = Commerce::findOrFail($id);
+        $commerce->delete();
+        return redirect()->back();
     }
 }
